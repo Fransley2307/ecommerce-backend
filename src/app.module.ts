@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common';
+import { ConfigurableModuleBuilder, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './cases/categories/category.module';
 import { BrandModule } from './cases/brands/brand.module';
 import { ProductModule } from './cases/products/products.module';
+import { CityModule } from './cases/city/city.module';
+import { ConfigModule } from '@nestjs/config';
+import { CustomerModule } from './cases/customers/customer.module';
 
 @Module({
   imports: [
@@ -21,7 +24,9 @@ import { ProductModule } from './cases/products/products.module';
     }),
     CategoryModule,
     BrandModule,
-    ProductModule
+    ProductModule,
+    CityModule,
+    CustomerModule
   ],
 })
 export class AppModule {}
