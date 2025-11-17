@@ -2,54 +2,55 @@ import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Par
 import { Brand } from "./brand.entity";
 import { BrandService } from "./brand.service";
 
-@Controller('brand')
+@Controller('brands')
 export class BrandController {
 
-    constructor(private service: BrandService) {}
+  constructor(private readonly service: BrandService) {}
 
-    @Get()
-    findAll(): Promise<Brand[]>{
-        return this.service.findAll();
+  @Get()
+  findAll(): Promise<Brand[]> {
+    return this.service.findAll();
+  }
+
+  @Get(':id')
+  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Brand> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
     }
 
-    @Get(':id')
-    async findById(@Param('id', ParseUUIDPipe)id: string): Promise<Brand>{
-        const found = await this.service.findById(id);
+    return found;
+  }
+ 
+  @Post()
+  create(@Body() brand: Brand) : Promise<Brand> {
+    return this.service.save(brand);
+  }
 
-        if (!found) {
-            throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
-        }
+  @Put(':id')
+  async update(@Param('id', ParseUUIDPipe) id: string, @Body() brand: Brand): Promise<Brand> {
+    const found = await this.service.findById(id);
 
-        return found;
+    if (!found) {
+      throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
     }
 
-    @Post()
-    create(@Body() brand: Brand) : Promise<Brand> {
-        return this.service.save(brand);
+    brand.id = id;
+
+    return this.service.save(brand);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
     }
 
-    @Put('id')
-    async update(@Param('id', ParseUUIDPipe)id: string, @Body() brand: Brand) : Promise<Brand> {
-        const found = await this.service.findById(id);
-
-        if (!found) {
-            throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
-        }
-        
-        brand.id = id;
-
-        return this.service.save(brand);
-    }
-
-    @Delete('id')
-    @HttpCode(204)
-    async remove(@Param('id', ParseUUIDPipe)id: string): Promise<void> {
-        const found = await this.service.findById(id);
-
-        if (!found) {
-            throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
-        }
-
-        return this.service.remove(id);
-    }
+    return this.service.remove(id);
+  }
 }
+
