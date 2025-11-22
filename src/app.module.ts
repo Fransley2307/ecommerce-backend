@@ -1,17 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+
+// Módulos do seu projeto
 import { CategoryModule } from './cases/categories/category.module';
 import { BrandModule } from './cases/brands/brand.module';
-import { CustomerModule } from './cases/customers/customer.module';
-import { ConfigModule } from '@nestjs/config';
+import { ProductModule } from './cases/products/product.module';
 import { CityModule } from './cases/cities/city.module';
-import { ProductModule } from './cases/produtcs/product.module';
+import { CustomerModule } from './cases/customers/customer.module';
+import { OrderModule } from './cases/orders/order.module';
+import { FavoriteModule } from './cases/favorites/favorite.module';
+import { ReviewModule } from './cases/reviews/review.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -20,13 +26,22 @@ import { ProductModule } from './cases/produtcs/product.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       autoLoadEntities: true,
-      synchronize: true
+      synchronize: true,
+
+      // Configuração obrigatória para Supabase
+      ssl: process.env.SSL === 'true'
+        ? { rejectUnauthorized: false }
+        : false,
     }),
+
     CategoryModule,
     BrandModule,
     ProductModule,
     CityModule,
-    CustomerModule
+    CustomerModule,
+    OrderModule,
+    FavoriteModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

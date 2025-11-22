@@ -4,53 +4,54 @@ import { CustomerService } from "./customer.service";
 
 @Controller('customers')
 export class CustomerController {
+    constructor (
+        private readonly service: CustomerService
+    ) {}
 
-  constructor(private readonly service: CustomerService) {}
-
-  @Get()
-  findAll(): Promise<Customer[]> {
-    return this.service.findAll();
-  }
-
-  @Get(':id')
-  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Customer> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+    @Get()
+    findAll(): Promise<Customer[]> {
+        return this.service.findAll();
     }
 
-    return found;
-  }
- 
-  @Post()
-  create(@Body() customer: Customer) : Promise<Customer> {
-    return this.service.save(customer);
-  }
+    @Get(':id')
+    async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Customer> {
+        const found = await this.service.findById(id);
+        
+        if (!found) {
+            throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+        }
 
-  @Put(':id')
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() customer: Customer): Promise<Customer> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+        return found;
     }
 
-    customer.id = id;
-
-    return this.service.save(customer);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+    @Post()
+    create(@Body() customer: Customer): Promise<Customer> {
+        return this.service.save(customer);
     }
 
-    return this.service.remove(id);
-  }
+    @Put(':id')
+    async update(@Param('id', ParseUUIDPipe) id: string, @Body() customer: Customer): Promise<Customer> {
+        const found = await this.service.findById(id);
+        
+        if (!found) {
+            throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+        }
+
+        customer.id = id;
+
+        return this.service.save(customer);
+    }
+
+    @Delete(':id')
+    @HttpCode(204)
+    async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+        const found = await this.service.findById(id);
+        
+        if (!found) {
+            throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+        }
+
+        return this.service.remove(id);
+    }
 }
 

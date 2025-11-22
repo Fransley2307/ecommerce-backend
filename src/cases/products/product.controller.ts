@@ -7,10 +7,8 @@ import { validate as isUUID } from 'uuid';
 @Controller('products')
 export class ProductController {
 
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly service: ProductService
-  ) {}
+  constructor(private readonly categoryService: CategoryService,
+              private readonly service: ProductService) {}
 
   @Get()
   async find(@Query('categoryId') categoryId: string): Promise<Product[]> {
@@ -63,4 +61,3 @@ export class ProductController {
     return this.service.remove(id);
   }
 }
-

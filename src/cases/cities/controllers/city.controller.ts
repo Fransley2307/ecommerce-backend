@@ -1,56 +1,56 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
-import { City } from "../entities/city.entity";
 import { CityService } from "../services/city.service";
+import { City } from "../entities/city.entity";
 
 @Controller('cities')
 export class CityController {
+    constructor (
+        private readonly service: CityService
+    ) {}
 
-  constructor(private readonly service: CityService) {}
-
-  @Get()
-  findAll(): Promise<City[]> {
-    return this.service.findAll();
-  }
-
-  @Get(':id')
-  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<City> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('City not found', HttpStatus.NOT_FOUND);
+    @Get()
+    findAll(): Promise<City[]> {
+        return this.service.findAll();
     }
 
-    return found;
-  }
- 
-  @Post()
-  create(@Body() city: City) : Promise<City> {
-    return this.service.save(city);
-  }
+    @Get(':id')
+    async findById(@Param('id', ParseUUIDPipe) id: string): Promise<City> {
+        const found = await this.service.findById(id);
+        
+        if (!found) {
+            throw new HttpException('City not found', HttpStatus.NOT_FOUND);
+        }
 
-  @Put(':id')
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() city: City): Promise<City> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('City not found', HttpStatus.NOT_FOUND);
+        return found;
     }
 
-    city.id = id;
-
-    return this.service.save(city);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('City not found', HttpStatus.NOT_FOUND);
+    @Post()
+    create(@Body() city: City): Promise<City> {
+        return this.service.save(city);
     }
 
-    return this.service.remove(id);
-  }
+    @Put(':id')
+    async update(@Param('id', ParseUUIDPipe) id: string, @Body() city: City): Promise<City> {
+        const found = await this.service.findById(id);
+        
+        if (!found) {
+            throw new HttpException('City not found', HttpStatus.NOT_FOUND);
+        }
+
+        city.id = id;
+
+        return this.service.save(city);
+    }
+
+    @Delete(':id')
+    @HttpCode(204)
+    async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+        const found = await this.service.findById(id);
+        
+        if (!found) {
+            throw new HttpException('City not found', HttpStatus.NOT_FOUND);
+        }
+
+        return this.service.remove(id);
+    }
 }
-

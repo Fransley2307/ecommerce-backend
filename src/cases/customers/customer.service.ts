@@ -23,7 +23,7 @@ export class CustomerService {
     return this.repository.save(customer);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.repository.delete(id);
-  }
+    async remove(id: string): Promise<void> {
+        await this.repository.delete({id: id});
+    }
 }

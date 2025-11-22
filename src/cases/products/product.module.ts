@@ -6,11 +6,11 @@ import { ProductController } from "./product.controller";
 import { CategoryModule } from "../categories/category.module";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Product]),
-    CategoryModule
-  ],
-  providers: [ProductService],
-  controllers: [ProductController]
+    imports: [
+        TypeOrmModule.forFeature([Product]), 
+        CategoryModule
+    ],
+    providers: [ProductService],
+    controllers: [ProductController]
 })
 export class ProductModule {}

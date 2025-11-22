@@ -3,18 +3,21 @@ import { City } from "../cities/entities/city.entity";
 
 @Entity('customer')
 export class Customer {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column({nullable: false})
-  name: string;
+    @Column({ nullable: false, length: 60 })
+    name: string;
 
-  @Column({length: 250, nullable: true})
-  address: string;
+    @Column({ length: 250 })
+    address: string;
 
-  @Column({length: 8, nullable: true})
-  zipcode: string;
+    @Column({ length: 8 })
+    zipcode: string;
 
-  @ManyToOne(() => City, {eager: true, nullable: true})
-  city: City;
+    @ManyToOne(() => City, { eager: true })
+    city: City;
+
+    @Column({ nullable: true })
+    userId: string
 }
