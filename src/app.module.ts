@@ -16,6 +16,7 @@ import { ReviewModule } from './cases/reviews/review.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env', 'src/.env'],
     }),
 
     TypeOrmModule.forRoot({
@@ -28,8 +29,8 @@ import { ReviewModule } from './cases/reviews/review.module';
       autoLoadEntities: true,
       synchronize: true,
 
-      // Configuração obrigatória para Supabase
-      ssl: process.env.SSL === 'true'
+      // Detecta SSL automaticamente (útil para Supabase) ou usa a variável SSL
+      ssl: (process.env.SSL === 'true' || (process.env.DB_HOST && process.env.DB_HOST.includes('supabase.co')))
         ? { rejectUnauthorized: false }
         : false,
     }),
